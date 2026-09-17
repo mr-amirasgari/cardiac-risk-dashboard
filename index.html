@@ -84,15 +84,71 @@
         </div>
       </form>
 
-      <section id="resultCard" class="result-card hidden" aria-live="polite">
-        <div>
-          <p class="result-label">Calibrated cardiac-risk estimate</p>
-          <p id="riskPercent" class="risk-percent">—</p>
+      <section id="resultCard" class="result-dashboard hidden" aria-live="polite">
+        <div class="result-overview">
+          <div id="riskGauge" class="risk-gauge below" role="img" aria-label="Estimated cardiac risk">
+            <div class="gauge-inner">
+              <span id="riskPercent" class="risk-percent">—</span>
+              <span class="gauge-caption">calibrated risk</span>
+            </div>
+          </div>
+
+          <div class="result-summary">
+            <p class="result-label">Cardiac risk estimate</p>
+            <h2 class="result-title">Prediction summary</h2>
+            <span id="riskBadge" class="risk-badge">—</span>
+            <p id="thresholdText" class="threshold-text"></p>
+            <p class="result-note">The percentage is the calibrated model output. The demo threshold is shown only for comparison.</p>
+          </div>
         </div>
-        <div class="result-side">
-          <span id="riskBadge" class="risk-badge">—</span>
-          <p id="thresholdText" class="threshold-text"></p>
+
+        <div class="result-grid">
+          <article class="result-panel">
+            <div class="panel-heading">
+              <div>
+                <p class="panel-kicker">Comparison</p>
+                <h3>Risk vs demo threshold</h3>
+              </div>
+              <span class="scale-label">0–100%</span>
+            </div>
+
+            <div class="bar-chart" aria-label="Risk and threshold comparison chart">
+              <div class="bar-row">
+                <div class="bar-meta"><span>Predicted risk</span><strong id="riskBarLabel">—</strong></div>
+                <div class="bar-track"><div id="riskBar" class="bar-fill risk"></div></div>
+              </div>
+              <div class="bar-row">
+                <div class="bar-meta"><span>Demo threshold</span><strong id="thresholdBarLabel">—</strong></div>
+                <div class="bar-track"><div id="thresholdBar" class="bar-fill threshold"></div></div>
+              </div>
+            </div>
+          </article>
+
+          <article class="result-panel">
+            <div class="panel-heading">
+              <div>
+                <p class="panel-kicker">Measurements</p>
+                <h3>Input summary</h3>
+              </div>
+            </div>
+            <div class="table-wrap">
+              <table class="summary-table">
+                <thead><tr><th>Measurement</th><th>Value</th></tr></thead>
+                <tbody id="summaryTableBody"></tbody>
+              </table>
+            </div>
+          </article>
         </div>
+
+        <article class="result-panel symptoms-panel">
+          <div class="panel-heading">
+            <div>
+              <p class="panel-kicker">Reported symptoms</p>
+              <h3>Selected symptoms</h3>
+            </div>
+          </div>
+          <div id="symptomBadges" class="symptom-badges"></div>
+        </article>
       </section>
 
       <p id="errorBox" class="error hidden" role="alert"></p>
@@ -104,6 +160,7 @@
   </main>
 
   <script src="https://cdn.jsdelivr.net/npm/onnxruntime-web@1.30.0/dist/ort.min.js"></script>
+  <script src="./dashboard-utils.js"></script>
   <script src="./app.js" defer></script>
 </body>
 </html>

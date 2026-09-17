@@ -131,17 +131,68 @@ function extractPositiveProbability(outputs) {
   throw new Error('Model probability output was not found.');
 }
 
-function renderResult(calibratedProbability) {
+function renderSummaryTable(featureObject) {
+  const rows = DashboardUtils.formatSummaryRows(featureObject);
+  const body = $('summaryTableBody');
+  body.replaceChildren();
+
+  for (const [label, value] of rows) {
+    const row = document.createElement('tr');
+    const labelCell = document.createElement('td');
+    const valueCell = document.createElement('td');
+    labelCell.textContent = label;
+    valueCell.textContent = value;
+    row.append(labelCell, valueCell);
+    body.appendChild(row);
+  }
+}
+
+function renderSymptoms(featureObject) {
+  const symptoms = DashboardUtils.getSelectedSymptoms(featureObject);
+  const container = $('symptomBadges');
+  container.replaceChildren();
+
+  if (symptoms.length === 0) {
+    const empty = document.createElement('span');
+    empty.className = 'symptom-empty';
+    empty.textContent = 'No symptoms selected';
+    container.appendChild(empty);
+    return;
+  }
+
+  for (const label of symptoms) {
+    const badge = document.createElement('span');
+    badge.className = 'symptom-badge';
+    badge.textContent = label;
+    container.appendChild(badge);
+  }
+}
+
+function renderResult(calibratedProbability, featureObject) {
   const threshold = Number(metadata.recommended_demo_threshold);
   const elevated = calibratedProbability >= threshold;
+  const comparison = DashboardUtils.buildComparison(calibratedProbability, threshold);
 
-  $('riskPercent').textContent = `${(calibratedProbability * 100).toFixed(1)}%`;
+  $('riskPercent').textContent = `${comparison.riskPercent.toFixed(1)}%`;
+
+  const gauge = $('riskGauge');
+  gauge.className = `risk-gauge ${elevated ? 'elevated' : 'below'}`;
+  gauge.style.setProperty('--gauge-angle', `${Math.min(Math.max(calibratedProbability, 0), 1) * 360}deg`);
+  gauge.setAttribute('aria-label', `Estimated cardiac risk ${comparison.riskPercent.toFixed(1)} percent`);
 
   const badge = $('riskBadge');
   badge.textContent = elevated ? 'Elevated demo flag' : 'Below demo threshold';
   badge.className = `risk-badge ${elevated ? 'elevated' : 'below'}`;
 
-  $('thresholdText').textContent = `Demo threshold: ${(threshold * 100).toFixed(1)}%`;
+  $('thresholdText').textContent = `Demo threshold: ${comparison.thresholdPercent.toFixed(1)}%`;
+  $('riskBarLabel').textContent = `${comparison.riskPercent.toFixed(1)}%`;
+  $('thresholdBarLabel').textContent = `${comparison.thresholdPercent.toFixed(1)}%`;
+
+  $('riskBar').style.width = comparison.riskWidth === 0 ? '0' : `max(${comparison.riskWidth}%, 4px)`;
+  $('thresholdBar').style.width = comparison.thresholdWidth === 0 ? '0' : `max(${comparison.thresholdWidth}%, 4px)`;
+
+  renderSummaryTable(featureObject);
+  renderSymptoms(featureObject);
   $('resultCard').classList.remove('hidden');
 }
 
@@ -159,7 +210,19 @@ async function predict(event) {
   button.textContent = 'Running…';
 
   try {
-    const vector = buildModelVector();
+    const featureObject = buildFeatureObject();
+    const hasNumericValue = numericInputs.some((id) => !Number.isNaN(featureObject[id]));
+    const hasSymptom = symptomInputs.some((id) => featureObject[id] === 1);
+    if (!hasNumericValue && !hasSymptom) {
+      throw new Error('Enter at least one vital sign or symptom.');
+    }
+
+    const vector = metadata.features.map((name) => {
+      if (!(name in featureObject)) {
+        throw new Error(`Missing feature mapping: ${name}`);
+      }
+      return featureObject[name];
+    });
     const input = new ort.Tensor('float32', new Float32Array(vector), [1, vector.length]);
     const feeds = { [session.inputNames[0]]: input };
     const outputs = await session.run(feeds);
@@ -167,7 +230,7 @@ async function predict(event) {
     const rawProbability = extractPositiveProbability(outputs);
     const calibratedProbability = calibrateProbability(rawProbability);
 
-    renderResult(calibratedProbability);
+    renderResult(calibratedProbability, featureObject);
   } catch (error) {
     console.error(error);
     showError(error?.message || 'Prediction failed.');

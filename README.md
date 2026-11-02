@@ -1,137 +1,166 @@
 <div align="center">
 
-# 🫀 Cardiac Risk Dashboard
+# 🫀 CardiacRisk-Web
 
-### Browser-Based Cardiovascular Risk Screening with ONNX Runtime Web
+### Browser-Based Cardiac Risk Estimation with Machine Learning
 
-A lightweight machine-learning dashboard that estimates cardiovascular risk directly in the browser using patient vital signs and reported symptoms.
+A lightweight client-side application for estimating cardiac-related risk from emergency-department triage data.
 
-**No backend. No database. No Python server.**
-
-<br>
-
-![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white)
-![CSS3](https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white)
-![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)
-![ONNX](https://img.shields.io/badge/ONNX-005CED?style=for-the-badge&logo=onnx&logoColor=white)
-![GitHub Pages](https://img.shields.io/badge/GitHub%20Pages-222222?style=for-the-badge&logo=github&logoColor=white)
+The trained machine-learning model runs **directly inside the browser** using ONNX Runtime Web.
 
 <br>
 
-### 🌐 [Live Demo]([https://mr-amirasgari.github.io/cardiac-risk-dashboard/])
+[![Live Demo](https://img.shields.io/badge/Live_Demo-Open_App-2563EB?style=for-the-badge&logo=github)](https://mr-amirasgari.github.io/cardiac-risk-dashboard/)
+[![GitHub Pages](https://img.shields.io/badge/Deployed-GitHub_Pages-222222?style=for-the-badge&logo=github)](https://mr-amirasgari.github.io/cardiac-risk-dashboard/)
+
+<br>
+
+![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=flat-square&logo=html5&logoColor=white)
+![CSS3](https://img.shields.io/badge/CSS3-1572B6?style=flat-square&logo=css3&logoColor=white)
+![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=flat-square&logo=javascript&logoColor=black)
+![Python](https://img.shields.io/badge/Python-3776AB?style=flat-square&logo=python&logoColor=white)
+![scikit-learn](https://img.shields.io/badge/scikit--learn-F7931E?style=flat-square&logo=scikitlearn&logoColor=white)
+![ONNX](https://img.shields.io/badge/ONNX-005CED?style=flat-square&logo=onnx&logoColor=white)
+
+<br>
+
+**No backend • No database • No Python server • Static deployment**
 
 </div>
 
 ---
 
-## Overview
+## 🌐 Live Application
 
-**Cardiac Risk Dashboard** is a client-side machine-learning application designed to demonstrate cardiovascular risk screening from routinely available triage information.
+The deployed application is available here:
 
-The application collects vital signs and symptom indicators, performs feature preprocessing in JavaScript, runs an exported machine-learning model through **ONNX Runtime Web**, and displays an estimated cardiovascular risk probability.
+### [Open CardiacRisk-Web →](https://mr-amirasgari.github.io/cardiac-risk-dashboard/)
 
-All inference happens locally inside the browser.
+The entire inference pipeline runs locally in the user's browser.
+
+---
+
+## ✨ Overview
+
+**CardiacRisk-Web** is a proof-of-concept machine-learning application developed to estimate the probability of a **primary cardiac diagnosis** using information available during emergency-department triage.
+
+The system combines:
+
+- Routine vital signs
+- Patient-reported symptoms
+- Missing-value indicators
+- A calibrated Logistic Regression model
+- ONNX-based browser inference
+
+The project demonstrates a complete workflow from clinical data preparation and machine-learning evaluation to deployment as a lightweight static web application.
+
+---
+
+## 🧠 How It Works
 
 ```text
-Patient Inputs
-      ↓
-Feature Engineering
-      ↓
-ONNX Runtime Web
-      ↓
-Logistic Regression
-      ↓
-Probability Calibration
-      ↓
-Risk Estimate
+Emergency Triage Inputs
+          │
+          ▼
+   Feature Engineering
+          │
+          ▼
+     26 Features
+          │
+          ▼
+   ONNX Runtime Web
+          │
+          ▼
+ Logistic Regression
+          │
+          ▼
+    Platt Calibration
+          │
+          ▼
+ Estimated Probability
 ```
 
----
-
-## Dashboard Preview
-
-<p align="center">
-  <img src="assets/dashboard-preview.png" width="900" alt="Cardiac Risk Dashboard Preview">
-</p>
-
-> Add a screenshot of the deployed dashboard as `assets/dashboard-preview.png`.
+The browser performs inference without sending prediction inputs to a dedicated model server.
 
 ---
 
-## Features
+## 📊 Project Snapshot
 
-- Fully browser-based inference
-- No backend API required
-- No database required
-- ONNX machine-learning model
-- Probability calibration
-- Cardiovascular risk estimation
-- Missing-value handling
-- Symptom-based feature engineering
-- Responsive web interface
-- Compatible with GitHub Pages
-- Runs entirely on the client side
+| Item | Details |
+|---|---|
+| Dataset | MIMIC-IV-ED Demo v2.2 |
+| Emergency visits | 222 |
+| Unique patients | 64 |
+| Primary cardiac cases | 14 |
+| Input features | 26 |
+| Final model | Logistic Regression |
+| Model format | ONNX |
+| Calibration | Platt Scaling |
+| Deployment | GitHub Pages |
+| Backend | None |
 
 ---
 
-## Input Variables
+## 🩺 Input Variables
 
 ### Vital Signs
 
-| Input | Description |
+| Variable | Description |
 |---|---|
 | Heart Rate | Beats per minute |
+| Respiratory Rate | Breaths per minute |
 | SpO₂ | Peripheral oxygen saturation |
 | Systolic BP | Systolic blood pressure |
 | Diastolic BP | Diastolic blood pressure |
-| Respiratory Rate | Breaths per minute |
 | Temperature | Body temperature |
-| Pain Score | Pain severity from 0–10 |
-| Acuity | Triage acuity level |
+| Pain Score | Pain intensity from 0 to 10 |
+| Acuity | Emergency triage acuity |
 
-### Symptoms
+### Reported Symptoms
 
-The interface also includes the following symptom indicators:
+The interface supports the following symptom indicators:
 
-- Chest pain
-- Shortness of breath / dyspnea
-- Palpitations
-- Dizziness
-- Syncope
-- Fatigue / weakness
-- Hypotension
-- Epigastric pain
-- Nausea / vomiting
+`Chest Pain` · `Dyspnea` · `Palpitations` · `Dizziness` · `Syncope` · `Fatigue` · `Hypotension` · `Epigastric Pain` · `Nausea / Vomiting`
 
 ---
 
-## Machine Learning Pipeline
+## 🤖 Machine-Learning Pipeline
 
-The current deployment uses a **Logistic Regression** model.
+The deployed pipeline uses:
 
 ```text
-Raw Inputs
-    ↓
-Missing-Value Indicators
-    ↓
+Raw Triage Data
+      ↓
+Feature Engineering
+      ↓
+Missingness Indicators
+      ↓
 Median Imputation
-    ↓
+      ↓
 Standard Scaling
-    ↓
+      ↓
 Logistic Regression
-    ↓
+      ↓
 Platt Calibration
-    ↓
+      ↓
 Calibrated Probability
 ```
 
-The deployed model receives **26 engineered features**.
+Three machine-learning algorithms were evaluated during development:
+
+| Model | Role |
+|---|---|
+| **Logistic Regression** | Final deployed model |
+| Random Forest | Comparative model |
+| XGBoost | Comparative model |
+
+Logistic Regression was selected for deployment because of its overall discrimination performance, interpretability, calibration workflow, and straightforward ONNX conversion.
 
 ---
 
-## Model Performance
+## 📈 Model Performance
 
-The current prototype was evaluated using patient-level cross-validation on the **MIMIC-IV-ED Demo v2.2** dataset.
+Performance was evaluated using **patient-level cross-validation** to keep visits from the same patient in the same fold.
 
 | Metric | Result |
 |---|---:|
@@ -140,9 +169,7 @@ The current prototype was evaluated using patient-level cross-validation on the 
 | Raw Brier Score | **0.1308** |
 | Calibrated Brier Score | **0.0538** |
 
-Probability calibration substantially reduced the Brier score in the demo evaluation.
-
-### Demo Thresholds
+### Probability Thresholds
 
 | Strategy | Threshold |
 |---|---:|
@@ -150,115 +177,61 @@ Probability calibration substantially reduced the Brier score in the demo evalua
 | Youden J | 0.091 |
 | Screening-oriented | 0.026 |
 
-These thresholds were derived only from the small demo dataset and should **not** be interpreted as clinically validated decision thresholds.
+> These values were obtained from the small MIMIC-IV-ED Demo dataset and are experimental. They are not clinically validated thresholds.
 
 ---
 
-## Dataset
+## 🎯 Why Calibration Matters
 
-The development pipeline currently uses:
+The application displays a probability rather than only a binary classification.
 
-### MIMIC-IV-ED Demo v2.2
+For this reason, probability calibration was included in the modeling pipeline.
 
-MIMIC-IV-ED contains emergency department information including:
-
-- Triage vital signs
-- Chief complaints
-- Emergency department stays
-- Diagnosis information
-- Repeated vital-sign measurements
-
-The public demo dataset was used to build and validate the end-to-end software pipeline.
-
-The workflow included:
+The raw Brier Score decreased from:
 
 ```text
-Data Understanding
-       ↓
-Exploratory Data Analysis
-       ↓
-Data Cleaning
-       ↓
-Cardiac Target Definition
-       ↓
-Feature Engineering
-       ↓
-Patient-Level Cross Validation
-       ↓
-Model Comparison
-       ↓
-Calibration
-       ↓
-Explainability
-       ↓
-Uncertainty Analysis
-       ↓
-ONNX Export
+0.1308
 ```
 
----
+to:
 
-## Model Development
+```text
+0.0538
+```
 
-Several models were evaluated during development:
-
-| Model | Role |
-|---|---|
-| Logistic Regression | Primary deployment candidate |
-| Random Forest | Secondary candidate |
-| XGBoost | Comparative model |
-
-The final demo deployment uses Logistic Regression because of its combination of discrimination performance, interpretability, and compatibility with lightweight browser deployment.
+after Platt calibration in the demo evaluation.
 
 ---
 
-## Explainability
+## 🔍 Explainability & Stability Analysis
 
-Feature analysis was performed using:
+The development workflow also included:
 
-- Standardized logistic regression coefficients
+- Standardized Logistic Regression coefficients
 - Cross-validated permutation importance
-- SHAP
-- Bootstrap prediction uncertainty
+- SHAP analysis
+- Patient-level bootstrap uncertainty analysis
 
-Among the strongest signals observed in the demo analysis were:
+Among the strongest signals observed in the exploratory demo analysis were:
 
 ```text
 Dyspnea
 Heart Rate
 ```
 
-Because the current dataset is intentionally small, these findings should be treated as exploratory rather than clinical conclusions.
+These observations should be interpreted only as exploratory findings because of the limited dataset size.
 
 ---
 
-## Uncertainty Analysis
+## ⚡ Browser-Based Inference
 
-Patient-level bootstrap resampling was used to study prediction stability.
-
-The analysis showed that some predictions remain highly sensitive to training-sample variation.
-
-This provides a basis for future versions of the dashboard to report both:
+The final trained model was exported to:
 
 ```text
-Risk Probability
-+
-Prediction Uncertainty
+models/cardiac_model.onnx
 ```
 
-rather than presenting a single probability without context.
-
----
-
-## Browser Inference
-
-The trained Scikit-learn pipeline was exported to:
-
-```text
-cardiac_model.onnx
-```
-
-The browser loads the model with **ONNX Runtime Web**.
+and loaded directly in JavaScript using **ONNX Runtime Web**.
 
 ```javascript
 const session = await ort.InferenceSession.create(
@@ -266,19 +239,100 @@ const session = await ort.InferenceSession.create(
 );
 ```
 
-Inference therefore happens directly on the user's device.
+The deployed pipeline therefore does not require:
 
-### Advantages
+```text
+❌ Flask
+❌ Django
+❌ FastAPI
+❌ Database
+❌ Python runtime on the server
+❌ Prediction API
+```
 
-- No patient information is sent to a prediction server
-- No backend infrastructure
-- Simple static deployment
-- Low hosting cost
-- Compatible with GitHub Pages
+Instead:
+
+```text
+Browser
+   ↓
+JavaScript
+   ↓
+ONNX Runtime Web
+   ↓
+Prediction
+```
 
 ---
 
-## Project Structure
+## 🖥️ Dashboard Output
+
+After prediction, the application displays:
+
+- Calibrated risk probability
+- Risk gauge
+- Demo-threshold comparison
+- Vital-sign summary
+- Selected symptom indicators
+- Model status
+
+The interface is designed to remain lightweight and readable while running completely as a static website.
+
+---
+
+## 🗂️ Dataset
+
+The project was developed using:
+
+### MIMIC-IV-ED Demo v2.2
+
+The workflow uses emergency-department information including:
+
+- Triage measurements
+- Chief complaints
+- ED stays
+- Diagnosis information
+
+The target used in the deployed model is **primary cardiac diagnosis**.
+
+The demo dataset was used to validate the complete technical pipeline rather than establish clinical effectiveness.
+
+---
+
+## 🔬 Development Workflow
+
+```text
+Data Understanding
+        ↓
+Exploratory Data Analysis
+        ↓
+Data Cleaning
+        ↓
+Target Definition
+        ↓
+Feature Engineering
+        ↓
+Patient-Level Cross-Validation
+        ↓
+Model Comparison
+        ↓
+Threshold Evaluation
+        ↓
+Probability Calibration
+        ↓
+Explainability Analysis
+        ↓
+Uncertainty Analysis
+        ↓
+Final Model Training
+        ↓
+ONNX Export
+        ↓
+Browser Deployment
+```
+
+---
+
+## 📁 Project Structure
 
 ```text
 cardiac-risk-dashboard/
@@ -292,29 +346,26 @@ cardiac-risk-dashboard/
 │   ├── model_metadata.json
 │   └── feature_names.json
 │
-├── assets/
-│   └── dashboard-preview.png
-│
 └── README.md
 ```
 
 ---
 
-## Run Locally
+## 🚀 Run Locally
 
 Clone the repository:
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/cardiac-risk-dashboard.git
+git clone https://github.com/mr-amirasgari/cardiac-risk-dashboard.git
 ```
 
-Enter the project:
+Move into the project directory:
 
 ```bash
 cd cardiac-risk-dashboard
 ```
 
-Start a local static server:
+Start a simple local server:
 
 ```bash
 python -m http.server 8000
@@ -328,105 +379,118 @@ http://localhost:8000
 
 ---
 
-## Deploy with GitHub Pages
+## 🌍 Deployment
 
-Push the project to GitHub and open:
+The project is designed for static hosting and is currently deployed using **GitHub Pages**.
 
-```text
-Repository
-→ Settings
-→ Pages
-```
-
-Select:
+Deployment configuration:
 
 ```text
-Source: Deploy from a branch
-Branch: main
-Folder: / (root)
+Repository Settings
+        ↓
+Pages
+        ↓
+Deploy from a branch
+        ↓
+main
+        ↓
+/ (root)
 ```
 
-After deployment, the application will be available at:
+Live version:
 
-```text
-https://YOUR_USERNAME.github.io/cardiac-risk-dashboard/
-```
+**https://mr-amirasgari.github.io/cardiac-risk-dashboard/**
 
 ---
 
-## Technology Stack
+## 🛠️ Technology Stack
 
-| Component | Technology |
+| Layer | Technology |
 |---|---|
-| Interface | HTML5 |
+| Machine Learning | Python |
+| Modeling | Scikit-learn |
+| Model Export | ONNX |
+| Browser Inference | ONNX Runtime Web |
+| Frontend | HTML5 |
 | Styling | CSS3 |
 | Application Logic | Vanilla JavaScript |
-| ML Development | Python / Scikit-learn |
-| Model Format | ONNX |
-| Browser Inference | ONNX Runtime Web |
-| Dataset | MIMIC-IV-ED Demo |
+| Dataset | MIMIC-IV-ED Demo v2.2 |
 | Hosting | GitHub Pages |
 
 ---
 
-## Limitations
+## ⚠️ Limitations
 
-The current implementation is intentionally a lightweight prototype.
+This project is a proof-of-concept and has important limitations:
 
-Major limitations include:
-
-- Training data is limited to the MIMIC-IV-ED Demo dataset
-- Very small number of positive cardiac cases
-- No external validation
-- No prospective clinical validation
-- Thresholds are experimental
-- Predictions should not be treated as medical diagnoses
-
-A production or research-grade version should be retrained and evaluated on substantially larger datasets.
+- The model was developed using the small MIMIC-IV-ED Demo dataset.
+- Only 14 primary cardiac cases were available.
+- No external validation was performed.
+- No prospective clinical validation was performed.
+- The symptom extraction approach is rule-based.
+- The reported thresholds are experimental.
+- Model performance may change substantially on larger datasets.
 
 ---
 
-## Future Improvements
+## 🔭 Future Development
 
 Potential extensions include:
 
-- Full MIMIC-IV-ED training
+- Training on the complete MIMIC-IV-ED dataset
 - External validation
-- Dynamic vital-sign monitoring
+- Temporal vital-sign modeling
 - Improved uncertainty estimation
-- Additional cardiovascular outcomes
-- Temporal prediction models
-- More advanced symptom NLP
-- Interactive model explanations
-- Improved mobile interface
-- Additional calibration methods
+- Additional cardiac outcomes
+- Advanced symptom NLP
+- Interactive explainability
+- Improved probability calibration
+- Mobile-oriented interface improvements
 
 ---
 
-## Disclaimer
+## ⚕️ Disclaimer
 
-> **This project is intended solely for software demonstration, educational, and research purposes.**
+> **CardiacRisk-Web is a research and software demonstration project.**
 
-The application is **not a medical device** and has not been clinically validated.
+The application is **not a medical device** and has **not been clinically validated**.
 
-Predictions generated by this application must not be used for medical diagnosis, treatment decisions, emergency triage, or as a replacement for professional healthcare evaluation.
+Its predictions must not be used for:
+
+- Medical diagnosis
+- Treatment decisions
+- Emergency triage
+- Clinical decision-making
+- Replacement of professional medical assessment
 
 ---
 
-## Data Usage
+## 📚 Data Usage
 
-MIMIC data is provided through **PhysioNet**.
+MIMIC-IV-ED data is provided through **PhysioNet**.
 
-Any use of MIMIC-derived datasets must comply with the applicable PhysioNet credentialing requirements, licenses, and data-use agreements.
+Any use of MIMIC-derived data must comply with the applicable PhysioNet licensing, credentialing, and data-use requirements.
+
+---
+
+## 👥 Authors
+
+**Omid Taheri**  
+**AmirMohammad Asgari**  
+**Siamak Salimy**
 
 ---
 
 <div align="center">
 
-### Cardiac Risk Dashboard
+## 🫀 CardiacRisk-Web
 
-**HTML • CSS • JavaScript • ONNX Runtime Web**
+**Machine Learning • Emergency Triage • ONNX • Browser Inference**
 
-Built as a lightweight demonstration of in-browser machine-learning inference.
+[**Launch Live Demo**](https://mr-amirasgari.github.io/cardiac-risk-dashboard/)
+
+<br>
+
+Built as a lightweight proof-of-concept for running calibrated machine-learning inference directly in the browser.
 
 </div>

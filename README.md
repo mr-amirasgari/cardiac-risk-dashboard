@@ -18,7 +18,7 @@ A lightweight machine-learning dashboard that estimates cardiovascular risk dire
 
 <br>
 
-### 🌐 [Live Demo]([https://YOUR_USERNAME.github.io/cardiac-risk-dashboard/](https://mr-amirasgari.github.io/cardiac-risk-dashboard/))
+### 🌐 [Live Demo]([https://mr-amirasgari.github.io/cardiac-risk-dashboard/](https://mr-amirasgari.github.io/cardiac-risk-dashboard/)))
 
 </div>
 
